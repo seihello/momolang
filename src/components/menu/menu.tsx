@@ -8,7 +8,7 @@ const menuItems = [
 
 export default function Menu() {
   return (
-    <div className="fixed left-0 top-0 flex h-screen w-48 flex-col bg-primary-50 shadow-md shadow-gray-500">
+    <div className="fixed left-0 top-0 flex h-screen w-48 flex-col bg-primary-50 shadow-md shadow-gray-500 text-sm">
       {menuItems.map((menuItem, index) => (
         <MenuItem
           key={index}
