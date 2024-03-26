@@ -38,6 +38,21 @@ export default function WordsPage() {
     }
   };
 
+  const getTdElement = (content: number | string | string[] | undefined) => {
+    return (
+      <td
+        className="border border-gray-300 p-1 align-text-top"
+        dangerouslySetInnerHTML={{
+          __html: content
+            ? typeof content === "object"
+              ? content.join("<br />")
+              : content
+            : "",
+        }}
+      />
+    );
+  };
+
   return (
     <div className="px-2">
       <table className="w-full table-auto border-collapse">
@@ -56,53 +71,14 @@ export default function WordsPage() {
         <tbody>
           {words.map((word, index) => (
             <tr key={index} className={getColor(word.level)}>
-              <td className="border border-gray-300 p-1 align-text-top">
-                {word.id}
-              </td>
-              <td
-                className="border border-gray-300 p-1 align-text-top"
-                dangerouslySetInnerHTML={{
-                  __html: word.titles ? word.titles.join("<br />") : "",
-                }}
-              />
-              <td
-                className="border border-gray-300 p-1 align-text-top"
-                dangerouslySetInnerHTML={{
-                  __html: word.meanings ? word.meanings.join("<br />") : "",
-                }}
-              />
-              <td
-                className="border border-gray-300 p-1 align-text-top"
-                dangerouslySetInnerHTML={{
-                  __html: word.sentences ? word.sentences.join("<br />") : "",
-                }}
-              />
-
-              <td
-                className="border border-gray-300 p-1 align-text-top"
-                dangerouslySetInnerHTML={{
-                  __html: word.collocations
-                    ? word.collocations.join("<br />")
-                    : "",
-                }}
-              />
-              <td
-                className="border border-gray-300 p-1 align-text-top"
-                dangerouslySetInnerHTML={{
-                  __html: word.tags ? word.tags.join("<br />") : "",
-                }}
-              />
-              <td className="border border-gray-300 p-1 align-text-top">
-                {word.level}
-              </td>
-              <td
-                className="border border-gray-300 p-1 align-text-top"
-                dangerouslySetInnerHTML={{
-                  __html: word.pronunciations
-                    ? word.pronunciations.join("<br />")
-                    : "",
-                }}
-              />
+              {getTdElement(word.id)}
+              {getTdElement(word.titles)}
+              {getTdElement(word.meanings)}
+              {getTdElement(word.sentences)}
+              {getTdElement(word.collocations)}
+              {getTdElement(word.tags)}
+              {getTdElement(word.level)}
+              {getTdElement(word.pronunciations)}
             </tr>
           ))}
         </tbody>
