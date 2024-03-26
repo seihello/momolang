@@ -19,7 +19,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Menu />
-        <main className="min-h-screen bg-primary-100 py-8">{children}</main>
+        <main className="bg-primary-50 min-h-screen py-8 pl-48">
+          {children}
+        </main>
       </body>
     </html>
   );
