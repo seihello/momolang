@@ -57,25 +57,48 @@ export default function WordsPage() {
           {words.map((word, index) => (
             <tr key={index} className={getColor(word.level)}>
               <td className="border border-gray-300 p-1">{word.id}</td>
-              <td className="border border-gray-300 p-1">
-                {word.titles ? word.titles.join("\n") : ""}
-              </td>
-              <td className="border border-gray-300 p-1">
-                {word.meanings ? word.meanings.join("\n") : ""}
-              </td>
-              <td className="border border-gray-300 p-1">
-                {word.sentences ? word.sentences.join("\n") : ""}
-              </td>
-              <td className="border border-gray-300 p-1">
-                {word.collocations ? word.collocations.join("\n") : ""}
-              </td>
-              <td className="border border-gray-300 p-1">
-                {word.tags ? word.tags.join("\n") : ""}
-              </td>
+              <td
+                className="border border-gray-300 p-1"
+                dangerouslySetInnerHTML={{
+                  __html: word.titles ? word.titles.join("<br />") : "",
+                }}
+              />
+              <td
+                className="border border-gray-300 p-1"
+                dangerouslySetInnerHTML={{
+                  __html: word.meanings ? word.meanings.join("<br />") : "",
+                }}
+              />
+              <td
+                className="border border-gray-300 p-1"
+                dangerouslySetInnerHTML={{
+                  __html: word.sentences ? word.sentences.join("<br />") : "",
+                }}
+              />
+
+              <td
+                className="border border-gray-300 p-1"
+                dangerouslySetInnerHTML={{
+                  __html: word.collocations
+                    ? word.collocations.join("<br />")
+                    : "",
+                }}
+              />
+              <td
+                className="border border-gray-300 p-1"
+                dangerouslySetInnerHTML={{
+                  __html: word.tags ? word.tags.join("<br />") : "",
+                }}
+              />
               <td className="border border-gray-300 p-1">{word.level}</td>
-              <td className="border border-gray-300 p-1">
-                {word.pronunciations ? word.pronunciations.join("\n") : ""}
-              </td>
+              <td
+                className="border border-gray-300 p-1"
+                dangerouslySetInnerHTML={{
+                  __html: word.pronunciations
+                    ? word.pronunciations.join("<br />")
+                    : "",
+                }}
+              />
             </tr>
           ))}
         </tbody>
