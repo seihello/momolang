@@ -1,3 +1,9 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import Link from "next/link";
 
 type Props = {
@@ -8,12 +14,20 @@ type Props = {
 
 export default function MenuItem({ title, link, icon }: Props) {
   return (
-    <Link
-      href={link}
-      className="bg-primary-50 flex items-center gap-x-2 px-6 py-2 text-primary-900 hover:bg-primary-100"
-    >
-      {icon}
-      <div>{title}</div>
-    </Link>
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link
+            href={link}
+            className="flex h-12 w-12 items-center justify-center rounded-md text-xl text-primary-900 hover:bg-primary-100"
+          >
+            {icon}
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent side="right" className="bg-gray-900/80 text-white">
+          <p className="font-normal text-gray-100">{title}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }

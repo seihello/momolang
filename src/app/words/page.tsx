@@ -40,17 +40,17 @@ export default function WordsPage() {
 
   return (
     <div className="px-2">
-      <table className="w-full table-auto border-collapse border border-gray-300">
+      <table className="w-full table-auto border-collapse">
         <thead>
-          <tr className="bg-white">
-            <th className="border border-gray-300">ID</th>
-            <th className="border border-gray-300">Title</th>
-            <th className="border border-gray-300">Meaning</th>
-            <th className="border border-gray-300">Sentence</th>
-            <th className="border border-gray-300">Collocation</th>
-            <th className="min-w-28 border border-gray-300">Tag</th>
-            <th className="min-w-16 border border-gray-300">Level</th>
-            <th className="min-w-28 border border-gray-300">Pronunciation</th>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Meaning</th>
+            <th>Sentence</th>
+            <th>Collocation</th>
+            <th className="min-w-28">Tag</th>
+            <th className="min-w-16">Level</th>
+            <th className="min-w-28">Pronunciation</th>
           </tr>
         </thead>
         <tbody>
