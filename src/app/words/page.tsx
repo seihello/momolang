@@ -56,28 +56,30 @@ export default function WordsPage() {
         <tbody>
           {words.map((word, index) => (
             <tr key={index} className={getColor(word.level)}>
-              <td className="border border-gray-300 p-1">{word.id}</td>
+              <td className="border border-gray-300 p-1 align-text-top">
+                {word.id}
+              </td>
               <td
-                className="border border-gray-300 p-1"
+                className="border border-gray-300 p-1 align-text-top"
                 dangerouslySetInnerHTML={{
                   __html: word.titles ? word.titles.join("<br />") : "",
                 }}
               />
               <td
-                className="border border-gray-300 p-1"
+                className="border border-gray-300 p-1 align-text-top"
                 dangerouslySetInnerHTML={{
                   __html: word.meanings ? word.meanings.join("<br />") : "",
                 }}
               />
               <td
-                className="border border-gray-300 p-1"
+                className="border border-gray-300 p-1 align-text-top"
                 dangerouslySetInnerHTML={{
                   __html: word.sentences ? word.sentences.join("<br />") : "",
                 }}
               />
 
               <td
-                className="border border-gray-300 p-1"
+                className="border border-gray-300 p-1 align-text-top"
                 dangerouslySetInnerHTML={{
                   __html: word.collocations
                     ? word.collocations.join("<br />")
@@ -85,14 +87,16 @@ export default function WordsPage() {
                 }}
               />
               <td
-                className="border border-gray-300 p-1"
+                className="border border-gray-300 p-1 align-text-top"
                 dangerouslySetInnerHTML={{
                   __html: word.tags ? word.tags.join("<br />") : "",
                 }}
               />
-              <td className="border border-gray-300 p-1">{word.level}</td>
+              <td className="border border-gray-300 p-1 align-text-top">
+                {word.level}
+              </td>
               <td
-                className="border border-gray-300 p-1"
+                className="border border-gray-300 p-1 align-text-top"
                 dangerouslySetInnerHTML={{
                   __html: word.pronunciations
                     ? word.pronunciations.join("<br />")
