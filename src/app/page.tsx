@@ -1,4 +1,5 @@
 "use client";
+import BackForwardMenu from "@/components/home/back-forward-menu";
 import getWordById from "@/lib/supabase/get-word-by-id";
 import getWordCount from "@/lib/supabase/get-word-count";
 import Word from "@/types/word.type";
@@ -6,16 +7,17 @@ import { useCallback, useEffect, useState } from "react";
 
 export default function Home() {
   const [wordCount, setWordCount] = useState<number>(0);
-  const [currentWord, setCurrentWord] = useState<Word>();
+  const [words, setWords] = useState<Word[]>([]);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const setNewWord = useCallback(async () => {
     setIsLoading(true);
     const id = Math.floor(Math.random() * wordCount);
     const word = await getWordById(id);
-    setCurrentWord(word);
+    setWords([...words, word]);
     setIsLoading(false);
-  }, [wordCount]);
+  }, [wordCount, words]);
 
   useEffect(() => {
     const run = async () => {
@@ -41,7 +43,16 @@ export default function Home() {
     run();
   }, [setNewWord, wordCount]);
 
-  if (!currentWord) return;
+  const toNext = async () => {
+    if (currentIndex === words.length - 1) {
+      await setNewWord();
+    }
+    setCurrentIndex(currentIndex + 1);
+  };
+
+  if (words.length === 0 || currentIndex >= words.length) return;
+
+  const currentWord = words[currentIndex];
 
   return (
     <div className="flex flex-col px-24">
@@ -79,6 +90,7 @@ export default function Home() {
           ))}
         </div>
       )}
+      <BackForwardMenu toNext={toNext}/>
     </div>
   );
 }
