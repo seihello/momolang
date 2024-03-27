@@ -1,9 +1,84 @@
-import Menu from "@/components/menu/menu";
+"use client";
+import getWordById from "@/lib/supabase/get-word-by-id";
+import getWordCount from "@/lib/supabase/get-word-count";
+import Word from "@/types/word.type";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Home() {
+  const [wordCount, setWordCount] = useState<number>(0);
+  const [currentWord, setCurrentWord] = useState<Word>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const setNewWord = useCallback(async () => {
+    setIsLoading(true);
+    const id = Math.floor(Math.random() * wordCount);
+    const word = await getWordById(id);
+    setCurrentWord(word);
+    setIsLoading(false);
+  }, [wordCount]);
+
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const wordCount = await getWordCount();
+        setWordCount(wordCount);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    run();
+  }, []);
+
+  useEffect(() => {
+    const run = async () => {
+      if (!wordCount) return;
+      try {
+        await setNewWord();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    run();
+  }, [setNewWord, wordCount]);
+
+  if (!currentWord) return;
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 text-primary-900">
-      
-    </main>
+    <div className="flex flex-col px-24">
+      <div
+        className="text-2xl text-primary-700"
+        dangerouslySetInnerHTML={{
+          __html: currentWord.titles.join("<br />") || "",
+        }}
+      />
+      {currentWord.meanings && (
+        <div
+          className="text-lg text-gray-700"
+          dangerouslySetInnerHTML={{
+            __html: currentWord.meanings.join("<br />") || "",
+          }}
+        />
+      )}
+      {currentWord.sentences && (
+        <div
+          className="mt-2 text-lg text-gray-900"
+          dangerouslySetInnerHTML={{
+            __html: currentWord.sentences.join("<br />") || "",
+          }}
+        />
+      )}
+      {currentWord.tags && (
+        <div className="mt-8 flex flex-wrap items-center gap-2">
+          {currentWord.tags.map((tag: string, index: number) => (
+            <div
+              key={index}
+              className="flex min-w-16 justify-center rounded-full border border-red-500 bg-red-50 px-2 py-1 text-sm text-red-700"
+            >
+              {tag}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
