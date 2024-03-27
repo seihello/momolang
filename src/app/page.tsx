@@ -50,6 +50,12 @@ export default function Home() {
     setCurrentIndex(currentIndex + 1);
   };
 
+  const toPrevious = async () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
   if (words.length === 0 || currentIndex >= words.length) return;
 
   const currentWord = words[currentIndex];
@@ -90,7 +96,7 @@ export default function Home() {
           ))}
         </div>
       )}
-      <BackForwardMenu toNext={toNext}/>
+      <BackForwardMenu toNext={toNext} toPrevious={toPrevious}/>
     </div>
   );
 }
