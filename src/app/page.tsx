@@ -96,7 +96,11 @@ export default function Home() {
           ))}
         </div>
       )}
-      <BackForwardMenu toNext={toNext} toPrevious={toPrevious}/>
+      <BackForwardMenu
+        toNext={toNext}
+        toPrevious={toPrevious}
+        isFirst={currentIndex === 0}
+      />
     </div>
   );
 }
