@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Listbox, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { FaSortAmountDown, FaSortAmountDownAlt } from "react-icons/fa";
@@ -30,23 +29,28 @@ export default function FilterAndSort({
   const [sortType, setSortType] = useState<SortType>(SortType.None);
 
   useEffect(() => {
-    if (compare && setItems) {
-      if (sortType === SortType.Ascending) {
-        setItems((prev) => {
-          const newItems = [...prev];
-          newItems.sort(compare);
-          return newItems;
-        });
-      } else if (sortType === SortType.Descending) {
-        setItems((prev) => {
-          const newItems = [...prev];
-          newItems.sort(compare);
-          newItems.reverse();
-          return newItems;
-        });
+    const sort = async () => {
+      if (compare && setItems) {
+        if (sortType === SortType.Ascending) {
+          setItems((prev) => {
+            const newItems = [...prev];
+            newItems.sort(compare);
+            return newItems;
+          });
+        } else if (sortType === SortType.Descending) {
+          setItems((prev) => {
+            const newItems = [...prev];
+            newItems.sort(compare);
+            newItems.reverse();
+            return newItems;
+          });
+        }
       }
-    }
+    };
+    sort();
   }, [sortType, compare, setItems]);
+
+  // console.log("sortType", sortType);
 
   return (
     <Listbox value={selectedItems} onChange={setSelectedItems} multiple>
@@ -63,35 +67,22 @@ export default function FilterAndSort({
         <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-auto overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
           {compare && setItems && (
             <div className="flex items-stretch border-b">
-              <Button
-                variant="ghost"
-                className={`flex-1 rounded-none border-r ${sortType === SortType.Ascending ? "bg-gray-300" : ""}`}
-                onClick={() => {
+              <button
+                className={`flex flex-1 items-center justify-center rounded-none border-r py-2 ${sortType === SortType.Ascending ? "bg-gray-300" : ""}`}
+                onClick={async () => {
                   setSortType(SortType.Ascending);
-                  // setItems((prev) => {
-                  //   const newItems = [...prev];
-                  //   newItems.sort(compare);
-                  //   return newItems;
-                  // });
                 }}
               >
                 <FaSortAmountDownAlt />
-              </Button>
-              <Button
-                variant="ghost"
-                className={`flex-1 rounded-none ${sortType === SortType.Descending ? "bg-gray-300" : ""}`}
-                onClick={() => {
+              </button>
+              <button
+                className={`flex flex-1 items-center justify-center rounded-none py-2 ${sortType === SortType.Descending ? "bg-gray-300" : ""}`}
+                onClick={async () => {
                   setSortType(SortType.Descending);
-                  // setItems((prev) => {
-                  //   const newItems = [...prev];
-                  //   newItems.sort(compare);
-                  //   newItems.reverse();
-                  //   return newItems;
-                  // });
                 }}
               >
                 <FaSortAmountDown />
-              </Button>
+              </button>
             </div>
           )}
           {options &&
