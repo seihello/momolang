@@ -1,10 +1,12 @@
 "use client";
+import TagFilter from "@/components/filter/tag-filter";
 import getAllWords from "@/lib/supabase/get-all-words";
 import Word from "@/types/word.type";
 import { useEffect, useState } from "react";
 
 export default function WordsPage() {
   const [words, setWords] = useState<Word[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isLoadingWords, setIsLoadingWords] = useState<boolean>(true);
 
   useEffect(() => {
@@ -57,6 +59,10 @@ export default function WordsPage() {
 
   return (
     <div className="px-2">
+      <TagFilter
+        selectedTags={selectedTags}
+        setSelectedTags={setSelectedTags}
+      />
       <table className="w-full table-auto border-collapse">
         <thead>
           <tr>
