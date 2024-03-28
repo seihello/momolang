@@ -10,8 +10,10 @@ export default function WordsPage() {
   useEffect(() => {
     const run = async () => {
       try {
-        const words = await getAllWords();
-        setWords(words);
+        const words1 = await getAllWords(0, 999);
+        const words2 = await getAllWords(1000, 1999);
+        const words3 = await getAllWords(2000, 2999);
+        setWords([...words1, ...words2, ...words3]);
       } catch (error) {
         console.error(error);
       } finally {
