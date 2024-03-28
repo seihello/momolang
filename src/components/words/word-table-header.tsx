@@ -14,7 +14,7 @@ export default function WordTableHeader({
   setSelectedItems,
 }: Props) {
   return (
-    <th className="w-auto">
+    <th className="w-auto border border-gray-300 ">
       {options && selectedItems && setSelectedItems ? (
         <Filter
           title={title}
