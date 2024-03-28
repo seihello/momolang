@@ -4,7 +4,7 @@ import WordTableHeader from "@/components/words/word-table-header";
 import tags from "@/def/tags";
 import getAllWords from "@/lib/supabase/get-all-words";
 import Word from "@/types/word.type";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function WordsPage() {
   const [words, setWords] = useState<Word[]>([]);
@@ -55,12 +55,24 @@ export default function WordsPage() {
     );
   });
 
+  const compareLevel = useCallback((a: any, b: any) => {
+    if (a.level && b.level) {
+      return a.level < b.level ? -1 : 1;
+    } else if (!a.level && !b.level) {
+      return 0;
+    } else if (!a.level) {
+      return 1;
+    } else if (!b.level) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }, []);
+
+  if (isLoadingWords) return;
+
   return (
     <div className="px-2">
-      {/* <TagFilter
-        selectedTags={selectedTags}
-        setSelectedTags={setSelectedTags}
-      /> */}
       <table className="w-full table-auto border-collapse">
         <thead>
           <tr>
@@ -80,6 +92,8 @@ export default function WordsPage() {
               options={["0", "1", "2", "3", "4", "5"]}
               selectedItems={selectedLevels}
               setSelectedItems={setSelectedLevels}
+              compare={compareLevel}
+              setItems={setWords}
             />
             <WordTableHeader title="Pronunciation" />
           </tr>
