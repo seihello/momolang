@@ -73,19 +73,20 @@ export default function WordsPage() {
 
   return (
     <div className="px-2">
-      <table className="w-full table-auto border-collapse">
+      <table className="w-full table-fixed border-collapse">
         <thead>
           <tr>
-            <WordTableHeader title="ID" />
-            <WordTableHeader title="Title" />
-            <WordTableHeader title="Meaning" />
+            <WordTableHeader title="ID" width={48} />
+            <WordTableHeader title="Title" width={320} />
+            <WordTableHeader title="Meaning" width={256} />
             <WordTableHeader title="Sentence" />
-            <WordTableHeader title="Collocation" />
+            <WordTableHeader title="Collocation" width={128} />
             <WordTableHeader
               title="Tag"
               options={tags}
               selectedItems={selectedTags}
               setSelectedItems={setSelectedTags}
+              width={128}
             />
             <WordTableHeader
               title="Level"
@@ -94,8 +95,9 @@ export default function WordsPage() {
               setSelectedItems={setSelectedLevels}
               compare={compareLevel}
               setItems={setWords}
+              width={96}
             />
-            <WordTableHeader title="Pronunciation" />
+            <WordTableHeader title="Pronunciation" width={128} />
           </tr>
         </thead>
         <tbody>

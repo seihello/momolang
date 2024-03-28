@@ -7,6 +7,7 @@ type Props = {
   setSelectedItems?: React.Dispatch<React.SetStateAction<string[]>>;
   compare?: (a: any, b: any) => number;
   setItems?: React.Dispatch<React.SetStateAction<any[]>>;
+  width?: number;
 };
 
 export default function WordTableHeader({
@@ -16,9 +17,15 @@ export default function WordTableHeader({
   setSelectedItems,
   compare,
   setItems,
+  width,
 }: Props) {
   return (
-    <th className="w-auto border border-gray-300 ">
+    <th
+      className="border border-gray-300"
+      style={{
+        width: width || "auto",
+      }}
+    >
       {(options && selectedItems && setSelectedItems) ||
       (compare && setItems) ? (
         <FilterAndSort
