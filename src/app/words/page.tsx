@@ -70,17 +70,17 @@ export default function WordsPage() {
         selectedTags={selectedTags}
         setSelectedTags={setSelectedTags}
       />
-      <table className="w-full table-auto border-collapse">
+      <table className="w-full table-fixed border-collapse">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Meaning</th>
+            <th className="w-12">ID</th>
+            <th className="w-[340px]">Title</th>
+            <th className="w-[340px]">Meaning</th>
             <th>Sentence</th>
-            <th>Collocation</th>
-            <th className="min-w-28">Tag</th>
-            <th className="min-w-16">Level</th>
-            <th className="min-w-28">Pronunciation</th>
+            <th className="w-36">Collocation</th>
+            <th className="w-24">Tag</th>
+            <th className="w-16">Level</th>
+            <th className="w-28">Pronunciation</th>
           </tr>
         </thead>
         <tbody>
