@@ -57,6 +57,13 @@ export default function WordsPage() {
     );
   };
 
+  const filteredWords =
+    selectedTags.length > 0
+      ? words.filter((word: Word) =>
+          word.tags?.some((tag) => selectedTags.includes(tag)),
+        )
+      : words;
+
   return (
     <div className="px-2">
       <TagFilter
@@ -77,7 +84,7 @@ export default function WordsPage() {
           </tr>
         </thead>
         <tbody>
-          {words.map((word, index) => (
+          {filteredWords.map((word, index) => (
             <tr key={index} className={getColor(word.level)}>
               {getTdElement(word.id)}
               {getTdElement(word.titles)}
