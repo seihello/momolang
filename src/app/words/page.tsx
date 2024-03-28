@@ -1,5 +1,7 @@
 "use client";
-import TagFilter from "@/components/filter/tag-filter";
+import WordTableData from "@/components/words/word-table-data";
+import WordTableHeader from "@/components/words/word-table-header";
+import tags from "@/def/tags";
 import getAllWords from "@/lib/supabase/get-all-words";
 import Word from "@/types/word.type";
 import { useEffect, useState } from "react";
@@ -7,6 +9,7 @@ import { useEffect, useState } from "react";
 export default function WordsPage() {
   const [words, setWords] = useState<Word[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [isLoadingWords, setIsLoadingWords] = useState<boolean>(true);
 
   useEffect(() => {
@@ -42,58 +45,56 @@ export default function WordsPage() {
     }
   };
 
-  const getTdElement = (content: number | string | string[] | undefined) => {
+  const filteredWords = words.filter((word: Word) => {
     return (
-      <td
-        className="border border-gray-300 p-1 align-text-top"
-        dangerouslySetInnerHTML={{
-          __html: content
-            ? typeof content === "object"
-              ? content.join("<br />")
-              : content
-            : "",
-        }}
-      />
+      (selectedTags.length === 0 ||
+        word.tags?.some((tag) => selectedTags.includes(tag))) &&
+      (selectedLevels.length === 0 ||
+        (word.level !== undefined &&
+          selectedLevels.includes(word.level?.toString())))
     );
-  };
-
-  const filteredWords =
-    selectedTags.length > 0
-      ? words.filter((word: Word) =>
-          word.tags?.some((tag) => selectedTags.includes(tag)),
-        )
-      : words;
+  });
 
   return (
     <div className="px-2">
-      <TagFilter
+      {/* <TagFilter
         selectedTags={selectedTags}
         setSelectedTags={setSelectedTags}
-      />
-      <table className="w-full table-fixed border-collapse">
+      /> */}
+      <table className="w-full table-auto border-collapse">
         <thead>
           <tr>
-            <th className="w-12">ID</th>
-            <th className="w-[340px]">Title</th>
-            <th className="w-[340px]">Meaning</th>
-            <th>Sentence</th>
-            <th className="w-36">Collocation</th>
-            <th className="w-24">Tag</th>
-            <th className="w-16">Level</th>
-            <th className="w-28">Pronunciation</th>
+            <WordTableHeader title="ID" />
+            <WordTableHeader title="Title" />
+            <WordTableHeader title="Meaning" />
+            <WordTableHeader title="Sentence" />
+            <WordTableHeader title="Collocation" />
+            <WordTableHeader
+              title="Tag"
+              options={tags}
+              selectedItems={selectedTags}
+              setSelectedItems={setSelectedTags}
+            />
+            <WordTableHeader
+              title="Level"
+              options={["0", "1", "2", "3", "4", "5"]}
+              selectedItems={selectedLevels}
+              setSelectedItems={setSelectedLevels}
+            />
+            <WordTableHeader title="Pronunciation" />
           </tr>
         </thead>
         <tbody>
           {filteredWords.map((word, index) => (
             <tr key={index} className={getColor(word.level)}>
-              {getTdElement(word.id)}
-              {getTdElement(word.titles)}
-              {getTdElement(word.meanings)}
-              {getTdElement(word.sentences)}
-              {getTdElement(word.collocations)}
-              {getTdElement(word.tags)}
-              {getTdElement(word.level)}
-              {getTdElement(word.pronunciations)}
+              <WordTableData content={word.id} />
+              <WordTableData content={word.titles} />
+              <WordTableData content={word.meanings} />
+              <WordTableData content={word.sentences} />
+              <WordTableData content={word.collocations} />
+              <WordTableData content={word.tags} />
+              <WordTableData content={word.level} />
+              <WordTableData content={word.pronunciations} />
             </tr>
           ))}
         </tbody>
