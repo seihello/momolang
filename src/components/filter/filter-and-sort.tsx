@@ -92,7 +92,7 @@ export default function FilterAndSort({
               <Listbox.Option
                 key={index}
                 className={({ active }) =>
-                  `relative cursor-default select-none py-2 pl-10 pr-10 text-left ${
+                  `relative cursor-pointer select-none py-2 pl-10 pr-10 text-left ${
                     active ? "bg-primary-100 text-primary-900" : "text-gray-900"
                   }`
                 }
