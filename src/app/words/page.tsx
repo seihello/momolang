@@ -5,12 +5,16 @@ import WordTableHeader from "@/components/words/word-table-header";
 import tags from "@/def/tags";
 import getAllWords from "@/lib/supabase/get-all-words";
 import Word from "@/types/word.type";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function WordsPage() {
   const [words, setWords] = useState<Word[]>([]);
+
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // This is required for a rendering problem
   const [wordsFetchingProgress, setWordsFetchingProgress] = useState<number>(0);
 
   useEffect(() => {
@@ -22,9 +26,12 @@ export default function WordsPage() {
         setWordsFetchingProgress(66);
         const words3 = await getAllWords(2000, 2999);
         setWordsFetchingProgress(100);
+
         setWords([...words1, ...words2, ...words3]);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     run();
@@ -47,15 +54,17 @@ export default function WordsPage() {
     }
   };
 
-  const filteredWords = words.filter((word: Word) => {
-    return (
-      (selectedTags.length === 0 ||
-        word.tags?.some((tag) => selectedTags.includes(tag))) &&
-      (selectedLevels.length === 0 ||
-        (word.level !== undefined &&
-          selectedLevels.includes(word.level?.toString())))
-    );
-  });
+  const filteredWords = useMemo(() => {
+    return words.filter((word: Word) => {
+      return (
+        (selectedTags.length === 0 ||
+          word.tags?.some((tag) => selectedTags.includes(tag))) &&
+        (selectedLevels.length === 0 ||
+          (word.level !== undefined &&
+            selectedLevels.includes(word.level?.toString())))
+      );
+    });
+  }, [words, selectedTags, selectedLevels]);
 
   const compareLevel = useCallback((a: any, b: any) => {
     if (a.level && b.level) {
@@ -73,7 +82,7 @@ export default function WordsPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-2">
-      {wordsFetchingProgress < 100 || words.length === 0 ? (
+      {wordsFetchingProgress < 100 || words.length === 0 || isLoading ? (
         <Progress value={wordsFetchingProgress} className="h-4 w-1/3" />
       ) : (
         <table className="w-full table-fixed border-collapse">
