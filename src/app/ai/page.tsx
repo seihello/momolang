@@ -31,7 +31,7 @@ export default function Completion() {
   }, [completion]);
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-y-8 p-4 flex-1">
+    <div className="flex w-full flex-1 flex-col items-center justify-center gap-y-8 p-4">
       <form
         className="flex w-full max-w-[480px] items-center gap-x-2"
         onSubmit={(e) => {
@@ -47,7 +47,7 @@ export default function Completion() {
         />
         <Button type="submit">Generate</Button>
       </form>
-      <div className="flex flex-col gap-y-2">
+      <div className="flex min-h-32 w-full max-w-[1080px] flex-col gap-y-2">
         {generatedSentences.map((generatedSentence, index) => (
           <p key={index}>{generatedSentence}</p>
         ))}
