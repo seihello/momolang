@@ -63,7 +63,7 @@ export default function Home() {
   return (
     <div className="flex flex-col px-24">
       <div
-        className="text-2xl text-primary-700"
+        className="text-2xl text-main-700"
         dangerouslySetInnerHTML={{
           __html: currentWord.titles.join("<br />") || "",
         }}

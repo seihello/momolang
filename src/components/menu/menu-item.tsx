@@ -22,7 +22,7 @@ export default function MenuItem({ title, link, icon }: Props) {
         <TooltipTrigger asChild>
           <Link
             href={link}
-            className={`flex h-12 w-12 items-center justify-center rounded-md text-xl ${pathname === link ? "bg-primary-900 text-white" : "text-primary-900 hover:bg-primary-100"}`}
+            className={`flex h-12 w-12 items-center justify-center rounded-md text-xl ${pathname === link ? "bg-main-900 text-white" : "text-main-900 hover:bg-main-100"}`}
           >
             {icon}
           </Link>

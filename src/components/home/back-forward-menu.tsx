@@ -24,7 +24,7 @@ export default function BackForwardMenu({
         disabled={isFirst}
       >
         <BsFillArrowLeftSquareFill
-          className={`size-16 ${isFirst ? "text-gray-500" : "text-primary-900"}`}
+          className={`size-16 ${isFirst ? "text-gray-500" : "text-main-900"}`}
         />
       </Button>
       <Button
@@ -32,7 +32,7 @@ export default function BackForwardMenu({
         className="h-auto w-auto p-0"
         onClick={() => toNext()}
       >
-        <BsFillArrowRightSquareFill className="size-16 text-primary-900" />
+        <BsFillArrowRightSquareFill className="size-16 text-main-900" />
       </Button>
     </div>
   );

@@ -54,7 +54,7 @@ export default function FilterAndSort({
 
   return (
     <Listbox value={selectedItems} onChange={setSelectedItems} multiple>
-      <Listbox.Button className="relative flex h-full w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300">
+      <Listbox.Button className="relative flex h-full w-full cursor-pointer items-center justify-center gap-x-2 rounded-lg p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-main-300">
         <span className="block truncate">{title}</span>
         <FaSort />
       </Listbox.Button>
@@ -93,7 +93,7 @@ export default function FilterAndSort({
                 key={index}
                 className={({ active }) =>
                   `relative cursor-pointer select-none py-2 pl-10 pr-10 text-left ${
-                    active ? "bg-primary-100 text-primary-900" : "text-gray-900"
+                    active ? "bg-main-100 text-main-900" : "text-gray-900"
                   }`
                 }
                 value={option}
@@ -108,7 +108,7 @@ export default function FilterAndSort({
                       {option}
                     </span>
                     {selected ? (
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary-900">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-main-900">
                         <FaCheck />
                       </span>
                     ) : null}
