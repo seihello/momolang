@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useCompletion } from "ai/react";
 import { useEffect, useState } from "react";
 
@@ -30,21 +31,27 @@ export default function Completion() {
   }, [completion]);
 
   return (
-    <div className="p-4">
+    <div className="flex w-full flex-col items-center justify-center gap-y-8 p-4 flex-1">
       <form
+        className="flex w-full max-w-[480px] items-center gap-x-2"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit(e);
         }}
       >
-        <textarea className="w-64 border" onChange={handleInputChange} />
-        <div className="flex flex-col gap-y-2">
-          {generatedSentences.map((generatedSentence, index) => (
-            <p key={index}>{generatedSentence}</p>
-          ))}
-        </div>
+        <Input
+          type="text"
+          className="flex-1 border"
+          placeholder="Type a word..."
+          onChange={handleInputChange}
+        />
         <Button type="submit">Generate</Button>
       </form>
+      <div className="flex flex-col gap-y-2">
+        {generatedSentences.map((generatedSentence, index) => (
+          <p key={index}>{generatedSentence}</p>
+        ))}
+      </div>
     </div>
   );
 }
