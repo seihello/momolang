@@ -15,19 +15,33 @@ export default function WordsPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // This is required for a rendering problem
-  const [wordsFetchingProgress, setWordsFetchingProgress] = useState<number>(0);
+  const [wordsFetchingProgress, setWordsFetchingProgress] =
+    useState<number>(10);
 
   useEffect(() => {
     const run = async () => {
       try {
-        const words1 = await getAllWords(0, 999);
-        setWordsFetchingProgress(33);
-        const words2 = await getAllWords(1000, 1999);
-        setWordsFetchingProgress(66);
-        const words3 = await getAllWords(2000, 2999);
+        const words1 = await getAllWords(0, 499);
+        setWordsFetchingProgress((prev) => prev + 15);
+        const words2 = await getAllWords(500, 999);
+        setWordsFetchingProgress((prev) => prev + 15);
+        const words3 = await getAllWords(1000, 1499);
+        setWordsFetchingProgress((prev) => prev + 15);
+        const words4 = await getAllWords(1500, 1999);
+        setWordsFetchingProgress((prev) => prev + 15);
+        const words5 = await getAllWords(2000, 2499);
+        setWordsFetchingProgress((prev) => prev + 15);
+        const words6 = await getAllWords(2500, 2999);
         setWordsFetchingProgress(100);
 
-        setWords([...words1, ...words2, ...words3]);
+        setWords([
+          ...words1,
+          ...words2,
+          ...words3,
+          ...words4,
+          ...words5,
+          ...words6,
+        ]);
       } catch (error) {
         console.error(error);
       } finally {
@@ -83,7 +97,10 @@ export default function WordsPage() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-2">
       {wordsFetchingProgress < 100 || words.length === 0 || isLoading ? (
-        <Progress value={wordsFetchingProgress} className="h-4 w-1/3" />
+        <div className="flex w-1/3 flex-col items-center gap-y-2">
+          <p className="text-lg">Loading Words...</p>
+          <Progress value={wordsFetchingProgress} className="h-3" />
+        </div>
       ) : (
         <table className="w-full table-fixed border-collapse">
           <thead>
