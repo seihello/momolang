@@ -15,7 +15,7 @@ export default function Completion() {
       messages: [
         {
           role: "user",
-          content: `Please provide several sentences using the word "${word}." If the word has multiple meanings, please create sentences for each meaning. After each sentence, include the Japanese meaning of the whole sentence separated by spaces. Separate each pair of sentences with "|" symbol. e.g.) The apple fell to the ground due to the force of gravity. りんごは重力の力で地面に落ちた。 | The astronaut experienced zero gravity in outer space. 宇宙飛行士は宇宙で無重力を経験した。 | The seriousness of the situation added a sense of gravity to the conversation. 状況の深刻さが会話に重みを持たせた。`,
+          content: getPrompt(word, true),
         },
       ],
     },
@@ -26,7 +26,7 @@ export default function Completion() {
   }, [input]);
 
   useEffect(() => {
-    const generatedSentences = completion.split(" | ");
+    const generatedSentences = completion.split("|");
     setGeneratedSentences(generatedSentences);
   }, [completion]);
 
@@ -36,6 +36,7 @@ export default function Completion() {
         className="flex w-full max-w-[480px] items-center gap-x-2"
         onSubmit={(e) => {
           e.preventDefault();
+          setGeneratedSentences([]);
           handleSubmit(e);
         }}
       >
@@ -47,11 +48,28 @@ export default function Completion() {
         />
         <Button type="submit">Generate</Button>
       </form>
-      <div className="flex min-h-32 w-full max-w-[1080px] flex-col gap-y-2">
-        {generatedSentences.map((generatedSentence, index) => (
-          <p key={index}>{generatedSentence}</p>
-        ))}
+
+      <div className="flex min-h-32 max-w-[1080px] flex-col items-start gap-y-2">
+        {generatedSentences.map((generatedSentence, index) => {
+          const generatedSentencePair = generatedSentence.split("/");
+          return (
+            <p key={index}>
+              {generatedSentencePair.map(
+                (generatedSentencePairElement, index) => (
+                  <span key={index}>
+                    {index !== 0 && " "}
+                    {generatedSentencePairElement}
+                  </span>
+                ),
+              )}
+            </p>
+          );
+        })}
       </div>
     </div>
   );
+}
+
+function getPrompt(word: string, includesMeaning: boolean) {
+  return `Please provide several sentences using the word "${word}." If the word has multiple meanings or parts, please create sentences for each of them. The number of sentences can vary depending on variety of the word.  After each sentence, include the Japanese meaning of the whole sentence separated by /. Separate each of the pairs by |. Don't include number in the top of the sentences. e.g.) The apple fell to the ground due to the force of gravity./りんごは重力の力で地面に落ちた。|The astronaut experienced zero gravity in outer space./宇宙飛行士は宇宙で無重力を経験した。|The seriousness of the situation added a sense of gravity to the conversation./状況の深刻さが会話に重みを持たせた。`;
 }
