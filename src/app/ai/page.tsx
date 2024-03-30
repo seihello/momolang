@@ -4,22 +4,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCompletion } from "ai/react";
 import { useEffect, useState } from "react";
+import RingLoader from "react-spinners/RingLoader";
 
 export default function Completion() {
   const [word, setWord] = useState("");
   const [generatedSentences, setGeneratedSentences] = useState<string[]>([]);
 
-  const { completion, handleSubmit, handleInputChange, input } = useCompletion({
-    api: "/api/completion",
-    body: {
-      messages: [
-        {
-          role: "user",
-          content: getPrompt(word, true),
-        },
-      ],
-    },
-  });
+  const { completion, handleSubmit, handleInputChange, input, isLoading } =
+    useCompletion({
+      api: "/api/completion",
+      body: {
+        messages: [
+          {
+            role: "user",
+            content: getPrompt(word, true),
+          },
+        ],
+      },
+    });
 
   useEffect(() => {
     setWord(input);
@@ -46,7 +48,26 @@ export default function Completion() {
           placeholder="Type a word..."
           onChange={handleInputChange}
         />
-        <Button type="submit">Generate</Button>
+        <Button type="submit" className="w-24" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <RingLoader
+                color="white"
+                size={24}
+                // className="![&_span]:opacity-100"
+              />
+              <style>
+                {`
+                  span {
+                    opacity: 0.8 !important;
+                  }
+                `}
+              </style>
+            </>
+          ) : (
+            <span>Generate</span>
+          )}
+        </Button>
       </form>
 
       <div className="flex min-h-32 max-w-[1080px] flex-col items-start gap-y-2">
