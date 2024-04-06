@@ -4,7 +4,7 @@ import { RiRobot2Fill } from "react-icons/ri";
 
 const menuItems = [
   { title: "Home", link: "/", icon: <FaHouseChimneyWindow /> },
-  { title: "All Words", link: "/words", icon: <FaList /> },
+  { title: "My Words", link: "/words", icon: <FaList /> },
   { title: "AI", link: "/ai", icon: <RiRobot2Fill size={22} /> },
 ];
 

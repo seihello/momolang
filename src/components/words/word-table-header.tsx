@@ -1,10 +1,11 @@
 import FilterAndSort from "@/components/filter/filter-and-sort";
+import FilterOption from "@/types/filter-option.type";
 
 type Props = {
   title: string;
-  options?: string[];
-  selectedItems?: string[];
-  setSelectedItems?: React.Dispatch<React.SetStateAction<string[]>>;
+  options?: FilterOption[];
+  selectedItems?: number[];
+  setSelectedItems?: React.Dispatch<React.SetStateAction<number[]>>;
   compare?: (a: any, b: any) => number;
   setItems?: React.Dispatch<React.SetStateAction<any[]>>;
   width?: number;

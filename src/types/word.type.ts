@@ -1,12 +1,10 @@
 type Word = {
   id: number;
-  titles: string[];
-  meanings?: string[];
+  ipa?: string;
+  title: string;
+  meaning: string;
   sentences?: string[];
-  collocations?: string[];
-  tags?: string[];
-  level?: number;
-  pronunciations?: string[];
+  categoryIds?: number[];
 };
 
 export default Word;

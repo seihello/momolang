@@ -1,37 +1,22 @@
 import createClient from "@/lib/supabase/client";
 import Word from "@/types/word.type";
 
-export default async function getAllWords(
-  rangeStart?: number,
-  rangeEnd?: number,
-): Promise<Word[]> {
+export default async function getAllWords(): Promise<Word[]> {
   const supabase = createClient();
 
   try {
-    if (rangeStart !== undefined && rangeEnd !== undefined) {
-      const { data, error } = await supabase
-        .from("my_words")
-        .select("*")
-        .order("id", { ascending: true })
-        .range(rangeStart, rangeEnd);
+    const { data, error } = await supabase
+      .from("words")
+      .select("*, word_sentences(content) ,word_categories(category_id)")
+      .order("id", { ascending: true });
 
-      if (error) {
-        throw new Error(error.message);
-      }
+    console.log("data", data);
 
-      return data;
-    } else {
-      const { data, error } = await supabase
-        .from("my_words")
-        .select("*")
-        .order("id", { ascending: true });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return data;
+    if (error) {
+      throw new Error(error.message);
     }
+
+    return data;
   } catch (error) {
     throw error;
   }

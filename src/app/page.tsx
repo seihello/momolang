@@ -1,7 +1,6 @@
 "use client";
 import BackForwardMenu from "@/components/home/back-forward-menu";
-import getWordById from "@/lib/supabase/get-word-by-id";
-import getWordCount from "@/lib/supabase/get-word-count";
+
 import Word from "@/types/word.type";
 import { useCallback, useEffect, useState } from "react";
 

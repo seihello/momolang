@@ -1,3 +1,4 @@
+import FilterOption from "@/types/filter-option.type";
 import { Listbox, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { FaSortAmountDown, FaSortAmountDownAlt } from "react-icons/fa";
@@ -11,9 +12,9 @@ enum SortType {
 
 type Props = {
   title: string;
-  options?: string[];
-  selectedItems?: string[];
-  setSelectedItems?: React.Dispatch<React.SetStateAction<string[]>>;
+  options?: FilterOption[];
+  selectedItems?: number[];
+  setSelectedItems?: React.Dispatch<React.SetStateAction<number[]>>;
   compare?: (a: any, b: any) => number;
   setItems?: React.Dispatch<React.SetStateAction<any[]>>;
 };
@@ -96,7 +97,7 @@ export default function FilterAndSort({
                     active ? "bg-main-100 text-main-900" : "text-gray-900"
                   }`
                 }
-                value={option}
+                value={option.id}
               >
                 {({ selected }) => (
                   <>
@@ -105,7 +106,7 @@ export default function FilterAndSort({
                         selected ? "font-medium" : "font-normal"
                       }`}
                     >
-                      {option}
+                      {option.label}
                     </span>
                     {selected ? (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-main-900">

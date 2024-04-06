@@ -1,14 +1,14 @@
 import createClient from "@/lib/supabase/client";
-import Word from "@/types/word.type";
+import Category from "@/types/category.type";
 
-export default async function getWordById(id: number): Promise<Word> {
+export default async function getCategories(): Promise<Category[]> {
   const supabase = createClient();
+
   try {
     const { data, error } = await supabase
-      .from("my_words")
+      .from("categories")
       .select("*")
-      .eq("id", id)
-      .single();
+      .order("id", { ascending: true });
 
     if (error) {
       throw new Error(error.message);

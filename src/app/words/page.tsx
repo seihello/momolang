@@ -1,47 +1,26 @@
 "use client";
-import { Progress } from "@/components/ui/progress";
+import WordAddingForm from "@/components/words/word-adding-form";
 import WordTableData from "@/components/words/word-table-data";
 import WordTableHeader from "@/components/words/word-table-header";
-import tags from "@/def/tags";
 import getAllWords from "@/lib/supabase/get-all-words";
+import getCategories from "@/lib/supabase/get-categories";
+import Category from "@/types/category.type";
 import Word from "@/types/word.type";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function WordsPage() {
   const [words, setWords] = useState<Word[]>([]);
-
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
-
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // This is required for a rendering problem
-  const [wordsFetchingProgress, setWordsFetchingProgress] =
-    useState<number>(10);
 
   useEffect(() => {
     const run = async () => {
       try {
-        const words1 = await getAllWords(0, 499);
-        setWordsFetchingProgress((prev) => prev + 15);
-        const words2 = await getAllWords(500, 999);
-        setWordsFetchingProgress((prev) => prev + 15);
-        const words3 = await getAllWords(1000, 1499);
-        setWordsFetchingProgress((prev) => prev + 15);
-        const words4 = await getAllWords(1500, 1999);
-        setWordsFetchingProgress((prev) => prev + 15);
-        const words5 = await getAllWords(2000, 2499);
-        setWordsFetchingProgress((prev) => prev + 15);
-        const words6 = await getAllWords(2500, 2999);
-        setWordsFetchingProgress(100);
-
-        setWords([
-          ...words1,
-          ...words2,
-          ...words3,
-          ...words4,
-          ...words5,
-          ...words6,
-        ]);
+        const categories = await getCategories();
+        setCategories(categories);
+        const words = await getAllWords();
+        setWords(words);
       } catch (error) {
         console.error(error);
       } finally {
@@ -51,55 +30,23 @@ export default function WordsPage() {
     run();
   }, []);
 
-  const getColor = (level: number | undefined) => {
-    switch (level) {
-      case 1:
-        return "bg-red-50";
-      case 2:
-        return "bg-yellow-50";
-      case 3:
-        return "bg-lime-50";
-      case 4:
-        return "bg-blue-50";
-      case 5:
-        return "bg-violet-50";
-      default:
-        return "bg-white";
-    }
-  };
-
   const filteredWords = useMemo(() => {
     return words.filter((word: Word) => {
       return (
-        (selectedTags.length === 0 ||
-          word.tags?.some((tag) => selectedTags.includes(tag))) &&
-        (selectedLevels.length === 0 ||
-          (word.level !== undefined &&
-            selectedLevels.includes(word.level?.toString())))
+        selectedCategoryIds.length === 0 ||
+        word.categoryIds?.some((categoryId) =>
+          selectedCategoryIds.includes(categoryId),
+        )
       );
     });
-  }, [words, selectedTags, selectedLevels]);
-
-  const compareLevel = useCallback((a: any, b: any) => {
-    if (a.level && b.level) {
-      return a.level < b.level ? -1 : 1;
-    } else if (!a.level && !b.level) {
-      return 0;
-    } else if (!a.level) {
-      return 1;
-    } else if (!b.level) {
-      return -1;
-    } else {
-      return 0;
-    }
-  }, []);
+  }, [words, selectedCategoryIds]);
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-2">
-      {wordsFetchingProgress < 100 || words.length === 0 || isLoading ? (
+      <WordAddingForm />
+      {isLoading ? (
         <div className="flex w-1/3 flex-col items-center gap-y-2">
           <p className="text-lg">Loading Words...</p>
-          <Progress value={wordsFetchingProgress} className="h-3" />
         </div>
       ) : (
         <table className="w-full table-fixed border-collapse">
@@ -109,37 +56,33 @@ export default function WordsPage() {
               <WordTableHeader title="Title" width={320} />
               <WordTableHeader title="Meaning" width={256} />
               <WordTableHeader title="Sentence" />
-              <WordTableHeader title="Collocation" width={128} />
               <WordTableHeader
-                title="Tag"
-                options={tags}
-                selectedItems={selectedTags}
-                setSelectedItems={setSelectedTags}
+                title="Category"
+                options={categories.map((category) => {
+                  return { id: category.id, label: category.title };
+                })}
+                selectedItems={selectedCategoryIds}
+                setSelectedItems={setSelectedCategoryIds}
                 width={128}
-              />
-              <WordTableHeader
-                title="Level"
-                options={["0", "1", "2", "3", "4", "5"]}
-                selectedItems={selectedLevels}
-                setSelectedItems={setSelectedLevels}
-                compare={compareLevel}
-                setItems={setWords}
-                width={96}
               />
               <WordTableHeader title="Pronunciation" width={128} />
             </tr>
           </thead>
           <tbody>
             {filteredWords.map((word, index) => (
-              <tr key={index} className={getColor(word.level)}>
+              <tr key={index}>
                 <WordTableData content={word.id} />
-                <WordTableData content={word.titles} />
-                <WordTableData content={word.meanings} />
+                <WordTableData content={word.title} />
+                <WordTableData content={word.meaning} />
                 <WordTableData content={word.sentences} />
-                <WordTableData content={word.collocations} />
-                <WordTableData content={word.tags} />
-                <WordTableData content={word.level} />
-                <WordTableData content={word.pronunciations} />
+                <WordTableData
+                  content={word.categoryIds.map(
+                    (categoryId) =>
+                      categories.find((category) => category.id === categoryId)
+                        .title,
+                  )}
+                />
+                <WordTableData content={word.ipa} />
               </tr>
             ))}
           </tbody>
