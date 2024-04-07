@@ -61,6 +61,9 @@ export default function WordAddingForm({
         sentences,
         selectedCategoryIds,
       );
+      form.reset();
+      setSentences(["", "", ""]);
+      setSelectedCategoryIds([]);
     } catch (error) {
       console.error(error);
     }
