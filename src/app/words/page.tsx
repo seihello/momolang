@@ -45,9 +45,11 @@ export default function WordsPage() {
     });
   }, [words, selectedCategoryIds]);
 
+  console.log("words", words);
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-2">
-      <WordAddingForm categories={categories}/>
+      <WordAddingForm categories={categories} />
       {isLoading ? (
         <div className="flex w-1/3 flex-col items-center gap-y-2">
           <p className="text-lg">Loading Words...</p>
@@ -78,9 +80,13 @@ export default function WordsPage() {
                 <WordTableData content={word.meaning} />
                 <WordTableData content={word.sentences} />
                 <WordTableData
-                  content={word.categoryIds.map(
-                    (categoryId) => categories[categoryId],
-                  )}
+                  content={
+                    word.categoryIds
+                      ? word.categoryIds.map((categoryId) =>
+                          categories.get(categoryId),
+                        )
+                      : []
+                  }
                 />
                 <WordTableData content={word.ipa} />
               </tr>

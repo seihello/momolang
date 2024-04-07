@@ -7,16 +7,30 @@ export default async function getAllWords(): Promise<Word[]> {
   try {
     const { data, error } = await supabase
       .from("words")
-      .select("*, word_sentences(content) ,word_categories(category_id)")
+      .select("*, sentences(content) ,word_categories(categories(*))")
       .order("id", { ascending: true });
 
-    console.log("data", data);
+    const dataCopy = [...data];
+    const words: Word[] = [];
+    if (dataCopy) {
+      for (const wordRow of dataCopy) {
+        const sentences: string[] = wordRow.sentences.map(
+          (sentence: any) => sentence.content,
+        );
+        const categoryIds: number[] = wordRow.word_categories.map(
+          (category: any) => category.categories.id,
+        );
+        words.push({ ...wordRow, sentences, categoryIds });
+      }
+    }
 
+
+    
     if (error) {
       throw new Error(error.message);
     }
 
-    return data;
+    return words;
   } catch (error) {
     throw error;
   }
