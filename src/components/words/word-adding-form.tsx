@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -26,10 +27,16 @@ const schema = z.object({
 });
 
 type Props = {
+  isOpen: boolean;
+  setIsOpen: (value: boolean) => void;
   categories: Map<number, string>;
 };
 
-export default function WordAddingForm({ categories }: Props) {
+export default function WordAddingForm({
+  isOpen,
+  setIsOpen,
+  categories,
+}: Props) {
   const [sentences, setSentences] = useState<string[]>(["", "", ""]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
 
@@ -60,136 +67,142 @@ export default function WordAddingForm({ categories }: Props) {
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto flex w-full flex-col gap-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  className={fieldState.invalid ? "border-destructive" : ""}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="meaning"
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel>Meaning</FormLabel>
-              <FormControl>
-                <Textarea
-                  className={fieldState.invalid ? "border-destructive" : ""}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormItem>
-          <FormLabel>Sentences</FormLabel>
-          <div className="flex flex-col gap-y-2">
-            {sentences.map((sentence, index) => (
-              <Textarea
-                key={index}
-                value={sentence}
-                onChange={(e) => {
-                  const newSentences = [...sentences];
-                  newSentences[index] = e.target.value;
-                  setSentences(newSentences);
-                }}
-              />
-            ))}
-          </div>
-        </FormItem>
-
-        <FormItem>
-          <FormLabel>Categories</FormLabel>
-          <Listbox
-            value={selectedCategoryIds}
-            onChange={setSelectedCategoryIds}
-            multiple
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent className="!max-w-[900px]">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mx-auto flex w-full flex-col gap-y-4"
           >
-            <div className="relative mt-1">
-              <Listbox.Button className="focus-visible:ring-offset-primary-300 relative w-full cursor-pointer rounded-lg border bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 sm:text-sm">
-                {selectedCategoryIds.length > 0 ? (
-                  <span className="block truncate">
-                    {selectedCategoryIds
-                      .map((selectedPhaseId) => categories.get(selectedPhaseId))
-                      .join(", ")}
-                  </span>
-                ) : (
-                  <span className="text-gray-500">Select categories</span>
-                )}
-                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                  {/* <ChevronUpDownIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  /> */}
-                </span>
-              </Listbox.Button>
-              <Transition
-                as={Fragment}
-                leave="transition ease-in duration-100"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                  {Array.from(categories.entries()).map(
-                    (phaseOption, index) => (
-                      <Listbox.Option
-                        key={index}
-                        className={({ active }) =>
-                          `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                            active
-                              ? "bg-primary-100 text-primary-900"
-                              : "text-gray-900"
-                          }`
-                        }
-                        value={phaseOption[0]}
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`block truncate ${
-                                selected ? "font-medium" : "font-normal"
-                              }`}
-                            >
-                              {phaseOption[1]}
-                            </span>
-                            {selected ? (
-                              <span className="text-primary-900 absolute inset-y-0 left-0 flex items-center pl-3">
-                                <FaCheck />
-                              </span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ),
-                  )}
-                </Listbox.Options>
-              </Transition>
-            </div>
-          </Listbox>
-        </FormItem>
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      className={fieldState.invalid ? "border-destructive" : ""}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="meaning"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>Meaning</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className={fieldState.invalid ? "border-destructive" : ""}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <Button type="submit" disabled={!form.formState.isValid}>
-          Send
-        </Button>
-      </form>
-    </Form>
+            <FormItem>
+              <FormLabel>Sentences</FormLabel>
+              <div className="flex flex-col gap-y-2">
+                {sentences.map((sentence, index) => (
+                  <Textarea
+                    key={index}
+                    value={sentence}
+                    onChange={(e) => {
+                      const newSentences = [...sentences];
+                      newSentences[index] = e.target.value;
+                      setSentences(newSentences);
+                    }}
+                  />
+                ))}
+              </div>
+            </FormItem>
+
+            <FormItem>
+              <FormLabel>Categories</FormLabel>
+              <Listbox
+                value={selectedCategoryIds}
+                onChange={setSelectedCategoryIds}
+                multiple
+              >
+                <div className="relative mt-1">
+                  <Listbox.Button className="focus-visible:ring-offset-primary-300 relative w-full cursor-pointer rounded-lg border bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 sm:text-sm">
+                    {selectedCategoryIds.length > 0 ? (
+                      <span className="block truncate">
+                        {selectedCategoryIds
+                          .map((selectedPhaseId) =>
+                            categories.get(selectedPhaseId),
+                          )
+                          .join(", ")}
+                      </span>
+                    ) : (
+                      <span className="text-gray-500">Select categories</span>
+                    )}
+                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                      {/* <ChevronUpDownIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      /> */}
+                    </span>
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                      {Array.from(categories.entries()).map(
+                        (phaseOption, index) => (
+                          <Listbox.Option
+                            key={index}
+                            className={({ active }) =>
+                              `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                active
+                                  ? "bg-primary-100 text-primary-900"
+                                  : "text-gray-900"
+                              }`
+                            }
+                            value={phaseOption[0]}
+                          >
+                            {({ selected }) => (
+                              <>
+                                <span
+                                  className={`block truncate ${
+                                    selected ? "font-medium" : "font-normal"
+                                  }`}
+                                >
+                                  {phaseOption[1]}
+                                </span>
+                                {selected ? (
+                                  <span className="text-primary-900 absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <FaCheck />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ),
+                      )}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </FormItem>
+
+            <Button type="submit" disabled={!form.formState.isValid}>
+              Add
+            </Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import WordAddingForm from "@/components/words/word-adding-form";
 import WordTableData from "@/components/words/word-table-data";
 import WordTableHeader from "@/components/words/word-table-header";
@@ -12,6 +13,7 @@ export default function WordsPage() {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState<Map<number, string>>(new Map());
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const run = async () => {
@@ -45,11 +47,16 @@ export default function WordsPage() {
     });
   }, [words, selectedCategoryIds]);
 
-  console.log("words", words);
-
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-2">
-      <WordAddingForm categories={categories} />
+    <div className="flex flex-1 flex-col items-stretch gap-y-4 px-2">
+      <WordAddingForm
+        isOpen={isDialogOpen}
+        setIsOpen={setIsDialogOpen}
+        categories={categories}
+      />
+      <div className="flex justify-end">
+        <Button onClick={() => setIsDialogOpen(true)}>Add new word</Button>
+      </div>
       {isLoading ? (
         <div className="flex w-1/3 flex-col items-center gap-y-2">
           <p className="text-lg">Loading Words...</p>
