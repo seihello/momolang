@@ -58,9 +58,8 @@ export default function WordsPage() {
         <table className="w-full table-fixed border-collapse">
           <thead>
             <tr>
-              <WordTableHeader title="ID" width={48} />
-              <WordTableHeader title="Title" width={320} />
-              <WordTableHeader title="Meaning" width={256} />
+              <WordTableHeader title="Title" width={260} />
+              <WordTableHeader title="Meaning" width={380} />
               <WordTableHeader title="Sentence" />
               <WordTableHeader
                 title="Category"
@@ -69,13 +68,12 @@ export default function WordsPage() {
                 setSelectedItems={setSelectedCategoryIds}
                 width={128}
               />
-              <WordTableHeader title="Pronunciation" width={128} />
+              {/* <WordTableHeader title="Pronunciation" width={128} /> */}
             </tr>
           </thead>
           <tbody>
             {filteredWords.map((word, index) => (
               <tr key={index}>
-                <WordTableData content={word.id} />
                 <WordTableData content={word.title} />
                 <WordTableData content={word.meaning} />
                 <WordTableData content={word.sentences} />
@@ -88,7 +86,7 @@ export default function WordsPage() {
                       : []
                   }
                 />
-                <WordTableData content={word.ipa} />
+                {/* <WordTableData content={word.ipa} /> */}
               </tr>
             ))}
           </tbody>
