@@ -4,21 +4,25 @@ import WordTableData from "@/components/words/word-table-data";
 import WordTableHeader from "@/components/words/word-table-header";
 import getAllWords from "@/lib/supabase/get-all-words";
 import getCategories from "@/lib/supabase/get-categories";
-import Category from "@/types/category.type";
 import Word from "@/types/word.type";
 import { useEffect, useMemo, useState } from "react";
 
 export default function WordsPage() {
   const [words, setWords] = useState<Word[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [categories, setCategories] = useState<Map<number, string>>(new Map());
 
   useEffect(() => {
     const run = async () => {
       try {
         const categories = await getCategories();
-        setCategories(categories);
+        const categoryOptions = new Map<number, string>();
+        categories.forEach((category) => {
+          categoryOptions.set(category.id, category.title);
+        });
+        setCategories(categoryOptions);
+
         const words = await getAllWords();
         setWords(words);
       } catch (error) {
@@ -43,7 +47,7 @@ export default function WordsPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-2">
-      <WordAddingForm />
+      <WordAddingForm categories={categories}/>
       {isLoading ? (
         <div className="flex w-1/3 flex-col items-center gap-y-2">
           <p className="text-lg">Loading Words...</p>
@@ -58,9 +62,7 @@ export default function WordsPage() {
               <WordTableHeader title="Sentence" />
               <WordTableHeader
                 title="Category"
-                options={categories.map((category) => {
-                  return { id: category.id, label: category.title };
-                })}
+                options={categories}
                 selectedItems={selectedCategoryIds}
                 setSelectedItems={setSelectedCategoryIds}
                 width={128}
@@ -77,9 +79,7 @@ export default function WordsPage() {
                 <WordTableData content={word.sentences} />
                 <WordTableData
                   content={word.categoryIds.map(
-                    (categoryId) =>
-                      categories.find((category) => category.id === categoryId)
-                        .title,
+                    (categoryId) => categories[categoryId],
                   )}
                 />
                 <WordTableData content={word.ipa} />

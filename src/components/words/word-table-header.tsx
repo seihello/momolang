@@ -3,7 +3,7 @@ import FilterOption from "@/types/filter-option.type";
 
 type Props = {
   title: string;
-  options?: FilterOption[];
+  options?: Map<number, string>;
   selectedItems?: number[];
   setSelectedItems?: React.Dispatch<React.SetStateAction<number[]>>;
   compare?: (a: any, b: any) => number;
