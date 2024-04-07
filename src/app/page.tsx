@@ -1,28 +1,40 @@
 "use client";
 import BackForwardMenu from "@/components/home/back-forward-menu";
+import getAllWordInfo from "@/lib/supabase/get-all-word-info";
+import getCategories from "@/lib/supabase/get-categories";
+import getWordById from "@/lib/supabase/get-word-by-id";
+import WordInfo from "@/types/word-info.type";
 
 import Word from "@/types/word.type";
 import { useCallback, useEffect, useState } from "react";
 
 export default function Home() {
-  const [wordCount, setWordCount] = useState<number>(0);
+  const [wordInfoList, setWordInfoList] = useState<WordInfo[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [categories, setCategories] = useState<Map<number, string>>(new Map());
 
   const setNewWord = useCallback(async () => {
     setIsLoading(true);
-    const id = Math.floor(Math.random() * wordCount);
-    const word = await getWordById(id);
+    const index = Math.floor(Math.random() * wordInfoList.length);
+    const word = await getWordById(wordInfoList[index].id);
     setWords([...words, word]);
     setIsLoading(false);
-  }, [wordCount, words]);
+  }, [wordInfoList, words]);
 
   useEffect(() => {
     const run = async () => {
       try {
-        const wordCount = await getWordCount();
-        setWordCount(wordCount);
+        const categories = await getCategories();
+        const categoryOptions = new Map<number, string>();
+        categories.forEach((category) => {
+          categoryOptions.set(category.id, category.title);
+        });
+        setCategories(categoryOptions);
+
+        const wordInfoList = await getAllWordInfo();
+        setWordInfoList(wordInfoList);
       } catch (error) {
         console.error(error);
       }
@@ -32,7 +44,7 @@ export default function Home() {
 
   useEffect(() => {
     const run = async () => {
-      if (!wordCount) return;
+      if (wordInfoList.length === 0) return;
       try {
         await setNewWord();
       } catch (error) {
@@ -40,7 +52,7 @@ export default function Home() {
       }
     };
     run();
-  }, [setNewWord, wordCount]);
+  }, [setNewWord, wordInfoList]);
 
   const toNext = async () => {
     if (currentIndex === words.length - 1) {
@@ -64,14 +76,14 @@ export default function Home() {
       <div
         className="text-2xl text-main-700"
         dangerouslySetInnerHTML={{
-          __html: currentWord.titles.join("<br />") || "",
+          __html: currentWord.title,
         }}
       />
-      {currentWord.meanings && (
+      {currentWord.meaning && (
         <div
           className="text-lg text-gray-700"
           dangerouslySetInnerHTML={{
-            __html: currentWord.meanings.join("<br />") || "",
+            __html: currentWord.meaning,
           }}
         />
       )}
@@ -83,14 +95,14 @@ export default function Home() {
           }}
         />
       )}
-      {currentWord.tags && (
+      {currentWord.categoryIds && (
         <div className="mt-8 flex flex-wrap items-center gap-2">
-          {currentWord.tags.map((tag: string, index: number) => (
+          {currentWord.categoryIds.map((categoryId: number, index: number) => (
             <div
               key={index}
               className="flex min-w-16 justify-center rounded-full border border-red-500 bg-red-50 px-2 py-1 text-sm text-red-700"
             >
-              {tag}
+              {categories.get(categoryId)}
             </div>
           ))}
         </div>
