@@ -19,9 +19,9 @@ export default function Home() {
     setIsLoading(true);
     const index = Math.floor(Math.random() * wordInfoList.length);
     const word = await getWordById(wordInfoList[index].id);
-    setWords([...words, word]);
+    setWords((prev) => [...prev, word]);
     setIsLoading(false);
-  }, [wordInfoList, words]);
+  }, [wordInfoList]);
 
   useEffect(() => {
     const run = async () => {
@@ -67,9 +67,11 @@ export default function Home() {
     }
   };
 
-  if (words.length === 0 || currentIndex >= words.length) return;
+  if (words.length === 0 || currentIndex >= words.length || isLoading) return;
 
   const currentWord = words[currentIndex];
+
+  console.log("currentIndex", currentIndex);
 
   return (
     <div className="flex flex-col px-24">
