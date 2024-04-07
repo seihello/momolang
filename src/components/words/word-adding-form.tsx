@@ -20,7 +20,7 @@ import { z } from "zod";
 
 const schema = z.object({
   title: z.string().min(1, { message: "Title cannot be empty." }),
-  meaning: z.string().min(1, { message: "Meaning cannot be empty." }),
+  meaning: z.string(),
   // ipa: z.string().optional(),
   // sentences: z.string().array().optional(),
   // categoryIds: z.number().array().optional(),
@@ -86,7 +86,9 @@ export default function WordAddingForm({
               name="title"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>
+                    Title<span className="ml-1 text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="text"
