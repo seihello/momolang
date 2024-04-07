@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import addWord from "@/lib/supabase/add-word";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -18,11 +19,13 @@ const schema = z.object({
   title: z.string().min(1, { message: "Title cannot be empty." }),
   meaning: z.string().min(1, { message: "Meaning cannot be empty." }),
   // ipa: z.string().optional(),
-  sentences: z.string().array().optional(),
+  // sentences: z.string().array().optional(),
   // categoryIds: z.number().array().optional(),
 });
 
 export default function WordAddingForm() {
+  const [sentences, setSentences] = useState<string[]>(["", "", ""]);
+
   const form = useForm({
     resolver: zodResolver(schema),
     mode: "onChange",
@@ -30,14 +33,14 @@ export default function WordAddingForm() {
       title: "",
       meaning: "",
       // ipa: "",
-      sentences: Array(3),
+      // sentences: ["", "", ""],
       // categoryIds: [],
     },
   });
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
     try {
-      await addWord(values.title, values.meaning, "", values.sentences);
+      await addWord(values.title, values.meaning, "", sentences);
     } catch (error) {
       console.error(error);
     }
@@ -84,29 +87,17 @@ export default function WordAddingForm() {
           )}
         />
 
-        <div>
-          <FormLabel>Meaning</FormLabel>
-          {form.getValues("sentences").map((sentence, index) => (
-            <FormField
+        <FormLabel>Sentences</FormLabel>
+        <div className="flex flex-col gap-y-2">
+          {sentences.map((sentence, index) => (
+            <Textarea
               key={index}
-              control={form.control}
-              name="meaning"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea
-                      className={fieldState.invalid ? "border-destructive" : ""}
-                      onChange={(e) => {
-                        const newSentences = [...form.getValues("sentences")];
-                        newSentences[index] = e.target.value;
-                        form.setValue("sentences", newSentences);
-                      }}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              value={sentence}
+              onChange={(e) => {
+                const newSentences = [...sentences];
+                newSentences[index] = e.target.value;
+                setSentences(newSentences);
+              }}
             />
           ))}
         </div>

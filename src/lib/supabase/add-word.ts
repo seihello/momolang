@@ -23,12 +23,14 @@ export default async function addWord(
     if (insertWordRes.data.id) {
       if (sentences && sentences.length > 0) {
         for (const sentence of sentences) {
-          const insertSentencesRes = await supabase
-            .from("sentences")
-            .insert({ word_id: insertWordRes.data.id, content: sentence });
+          if (sentence.length > 0) {
+            const insertSentencesRes = await supabase
+              .from("sentences")
+              .insert({ word_id: insertWordRes.data.id, content: sentence });
 
-          if (insertSentencesRes.error) {
-            throw new Error(insertSentencesRes.error.message);
+            if (insertSentencesRes.error) {
+              throw new Error(insertSentencesRes.error.message);
+            }
           }
         }
       }
