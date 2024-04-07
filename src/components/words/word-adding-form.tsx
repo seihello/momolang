@@ -39,6 +39,7 @@ export default function WordAddingForm({
 }: Props) {
   const [sentences, setSentences] = useState<string[]>(["", "", ""]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -54,6 +55,7 @@ export default function WordAddingForm({
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
     try {
+      setIsSubmitting(true);
       await addWord(
         values.title,
         values.meaning,
@@ -66,6 +68,8 @@ export default function WordAddingForm({
       setSelectedCategoryIds([]);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -200,7 +204,10 @@ export default function WordAddingForm({
               </Listbox>
             </FormItem>
 
-            <Button type="submit" disabled={!form.formState.isValid}>
+            <Button
+              type="submit"
+              disabled={!form.formState.isValid || isSubmitting}
+            >
               Add
             </Button>
           </form>
