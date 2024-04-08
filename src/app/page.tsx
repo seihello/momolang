@@ -11,16 +11,16 @@ import { useCallback, useEffect, useState } from "react";
 export default function Home() {
   const [wordInfoList, setWordInfoList] = useState<WordInfo[]>([]);
   const [words, setWords] = useState<Word[]>([]);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [categories, setCategories] = useState<Map<number, string>>(new Map());
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const setNewWord = useCallback(async () => {
-    setIsLoading(true);
-    const index = Math.floor(Math.random() * wordInfoList.length);
-    const word = await getWordById(wordInfoList[index].id);
-    setWords((prev) => [...prev, word]);
-    setIsLoading(false);
+    if (wordInfoList.length > 0) {
+      const index = Math.floor(Math.random() * wordInfoList.length);
+      const word = await getWordById(wordInfoList[index].id);
+      setWords((prev) => [...prev, word]);
+    }
   }, [wordInfoList]);
 
   useEffect(() => {
@@ -44,15 +44,18 @@ export default function Home() {
 
   useEffect(() => {
     const run = async () => {
-      if (wordInfoList.length === 0) return;
+      if (isLoading || words.length > 0) return;
       try {
+        setIsLoading(true);
         await setNewWord();
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     run();
-  }, [setNewWord, wordInfoList]);
+  }, [setNewWord, isLoading, words]);
 
   const toNext = async () => {
     if (currentIndex === words.length - 1) {
@@ -67,11 +70,14 @@ export default function Home() {
     }
   };
 
-  if (words.length === 0 || currentIndex >= words.length || isLoading) return;
+  if (
+    categories.size === 0 ||
+    words.length === 0 ||
+    currentIndex >= words.length
+  )
+    return;
 
   const currentWord = words[currentIndex];
-
-  console.log("currentIndex", currentIndex);
 
   return (
     <div className="flex flex-col px-24">
