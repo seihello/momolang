@@ -119,6 +119,7 @@ export default function Home() {
         toNext={toNext}
         toPrevious={toPrevious}
         isFirst={currentIndex === 0}
+        isLast={currentIndex === wordInfoList.length - 1}
       />
     </div>
   );

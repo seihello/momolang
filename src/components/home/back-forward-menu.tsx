@@ -8,12 +8,14 @@ type Props = {
   toNext: () => Promise<void>;
   toPrevious: () => Promise<void>;
   isFirst: boolean;
+  isLast: boolean;
 };
 
 export default function BackForwardMenu({
   toNext,
   toPrevious,
   isFirst,
+  isLast,
 }: Props) {
   return (
     <div className="fixed bottom-12 right-12 flex items-center gap-x-8">
@@ -31,6 +33,7 @@ export default function BackForwardMenu({
         variant="ghost"
         className="h-auto w-auto p-0"
         onClick={() => toNext()}
+        disabled={isLast}
       >
         <BsFillArrowRightSquareFill className="size-16 text-main-900" />
       </Button>
