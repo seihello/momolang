@@ -93,6 +93,7 @@ export default function WordAddingForm({
                     <Input
                       type="text"
                       className={fieldState.invalid ? "border-destructive" : ""}
+                      placeholder="e.g.) blockchain"
                       {...field}
                     />
                   </FormControl>
@@ -109,6 +110,7 @@ export default function WordAddingForm({
                   <FormControl>
                     <Textarea
                       className={fieldState.invalid ? "border-destructive" : ""}
+                      placeholder="e.g.) A type of technology that helps keep digital information safe and secure. It's like a digital ledger, where transactions or data are recorded in a way that makes them very hard to change or hack."
                       {...field}
                     />
                   </FormControl>
@@ -129,6 +131,7 @@ export default function WordAddingForm({
                       newSentences[index] = e.target.value;
                       setSentences(newSentences);
                     }}
+                    placeholder="e.g.) Blockchain technology is revolutionizing the way transactions are recorded and verified in various industries."
                   />
                 ))}
               </div>
