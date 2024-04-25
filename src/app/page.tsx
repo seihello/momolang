@@ -11,17 +11,16 @@ import { useCallback, useEffect, useState } from "react";
 export default function Home() {
   const [wordInfoList, setWordInfoList] = useState<WordInfo[]>([]);
   const [words, setWords] = useState<Word[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [categories, setCategories] = useState<Map<number, string>>(new Map());
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const setNewWord = useCallback(async () => {
-    if (wordInfoList.length > 0) {
-      const index = Math.floor(Math.random() * wordInfoList.length);
-      const word = await getWordById(wordInfoList[index].id);
-      setWords((prev) => [...prev, word]);
+    if (wordInfoList.length > 0 && currentIndex >= words.length) {
+      const newWord = await getWordById(wordInfoList[currentIndex].id);
+      if (!words.some((word: Word) => word.id === newWord.id))
+        setWords((prev) => [...prev, newWord]);
     }
-  }, [wordInfoList]);
+  }, [currentIndex, wordInfoList, words]);
 
   useEffect(() => {
     const run = async () => {
@@ -43,25 +42,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const run = async () => {
-      if (isLoading || words.length > 0) return;
-      try {
-        setIsLoading(true);
-        await setNewWord();
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    run();
-  }, [setNewWord, isLoading, words]);
+    setNewWord();
+  }, [setNewWord]);
 
   const toNext = async () => {
-    if (currentIndex === words.length - 1) {
-      await setNewWord();
+    // if (currentIndex === words.length - 1) {
+    //   await setNewWord();
+    // }
+    if (currentIndex < wordInfoList.length - 1) {
+      setCurrentIndex(currentIndex + 1);
     }
-    setCurrentIndex(currentIndex + 1);
   };
 
   const toPrevious = async () => {
